@@ -12,4 +12,4 @@ jobs:
       - name: "Dioxus Deployment"
         uses: DioxusLabs/deploy-action@0.1.2
         with:
-          rootPath: "/frontend"
+          rootPath: "frontend"
