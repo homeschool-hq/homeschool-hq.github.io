@@ -1,12 +1,20 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 
 fn main() {
-    dioxus::launch(app);
+    dioxus::launch(|| rsx! {
+        Router::<Route> {}
+    });
 }
 
-#[component]
-fn app() -> Element {
+#[derive(Clone, Routable)]
+enum Route {
+    #[route("/")]
+    Home,
+}
+
+fn Home() -> Element {
     rsx! {
-        div { "Homeschool HQ" }
+        h1 { "Homeschool HQ" }
     }
 }
