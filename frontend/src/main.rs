@@ -3,7 +3,9 @@ use dioxus::prelude::*;
 
 fn main() {
     dioxus::launch(|| rsx! {
-        Router::<Route> {}
+        body {
+            Router::<Route> {}
+        }
     });
 }
 
