@@ -11,6 +11,13 @@ fn main() {
     });
 }
 
+#[derive(serde::Serialize)]
+struct Payload {
+    email: String,
+    password: String,
+    returnSecureToken: bool,
+}
+
 #[derive(Clone, Routable)]
 enum Route {
     #[route("/")]
@@ -27,14 +34,24 @@ fn Home() -> Element {
 }
 
 fn Login() -> Element {
-    let onsubmit = move |evt: FormEvent| async move {};
+    let onsubmit = move |evt: FormEvent| async move {
+        let payload = Payload {
+            email: evt.values()["email"].as_value(),
+            password: evt.values()["password"].as_value(),
+            returnSecureToken: true,
+        };
+        let response = reqwest::Client::new()
+            .post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCvvAGxu3nyHzYkvlxv9_UqPKTPqOJqIdk")
+            .json(&payload)
+            .send().await.unwrap();
+    };
 
     rsx! {
         h1 { "Login" }
         form { onsubmit,
-            label { "Username" }
+            label { "Email" }
             br {}
-            input { r#type: "text", id: "username", name: "username" }
+            input { r#type: "text", id: "email", name: "email" }
             br {}
             label { "Password" }
             br {}
