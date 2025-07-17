@@ -39,13 +39,21 @@ enum Route {
 const FIREBASE_RESPONSE: GlobalSignal<Option<FirebaseResponse>> = Global::new(Option::default);
 
 fn Home() -> Element {
+    let onclick = |_| {
+        use_navigator().push(Route::Login);
+    };
+
     rsx! {
         h1 { "Homeschool HQ" }
-        Link { to: Route::Login, if FIREBASE_RESPONSE.read().is_some() { "Log out" } else { "Log in" } }
+        button { onclick, if FIREBASE_RESPONSE.read().is_some() { "Log out" } else { "Log in" } }
     }
 }
 
 fn Login() -> Element {
+    let onclick = |_| {
+        *FIREBASE_RESPONSE.write() = None;
+        use_navigator().push(Route::Home);
+    };
     let onsubmit = move |evt: FormEvent| async move {
         let payload = Payload {
             email: evt.values()["email"].as_value(),
@@ -67,16 +75,20 @@ fn Login() -> Element {
 
     rsx! {
         h1 { "Login" }
-        form { onsubmit,
-            label { "Email" }
-            br {}
-            input { r#type: "text", id: "email", name: "email" }
-            br {}
-            label { "Password" }
-            br {}
-            input { r#type: "password", id: "password", name: "password" }
-            br {}
-            button { "Sign in" }
+        if FIREBASE_RESPONSE.read().is_some() {
+            button { onclick, "Confirm logout" }
+        } else {
+            form { onsubmit,
+                label { "Email" }
+                br {}
+                input { r#type: "text", id: "email", name: "email" }
+                br {}
+                label { "Password" }
+                br {}
+                input { r#type: "password", id: "password", name: "password" }
+                br {}
+                button { "Sign in" }
+            }
         }
     }
 }
