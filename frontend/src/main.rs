@@ -11,6 +11,16 @@ fn main() {
     });
 }
 
+#[derive(serde::Deserialize)]
+struct FirebaseResponse {
+    idToken: String,
+    email: String,
+    refreshToken: String,
+    expiresIn: String,
+    localId: String,
+    registered: bool,
+}
+
 #[derive(serde::Serialize)]
 struct Payload {
     email: String,
@@ -26,10 +36,12 @@ enum Route {
     Login,
 }
 
+const FIREBASE_RESPONSE: GlobalSignal<Option<FirebaseResponse>> = Global::new(Option::default);
+
 fn Home() -> Element {
     rsx! {
         h1 { "Homeschool HQ" }
-        Link { to: Route::Login {}, class: "nav-btn", "Login" }
+        Link { to: Route::Login, if FIREBASE_RESPONSE.read().is_some() { "Log out" } else { "Log in" } }
     }
 }
 
@@ -43,7 +55,14 @@ fn Login() -> Element {
         let response = reqwest::Client::new()
             .post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCvvAGxu3nyHzYkvlxv9_UqPKTPqOJqIdk")
             .json(&payload)
-            .send().await.unwrap();
+            .send()
+            .await
+            .unwrap();
+
+        if response.status() == 200 {
+            *FIREBASE_RESPONSE.write() = Some(response.json::<FirebaseResponse>().await.unwrap());
+        }
+        use_navigator().push(Route::Home);
     };
 
     rsx! {
