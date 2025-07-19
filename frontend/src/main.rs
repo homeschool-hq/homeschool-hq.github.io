@@ -110,8 +110,8 @@ pub fn Planner() -> Element {
                 selected_date.set(date);
             },
             view_date: view_date(),
-            on_view_change: move |view| {
-                view_date.set(view);
+            on_view_change: move |date| {
+                view_date.set(date);
             },
             CalendarGrid {}
         }
