@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
+use dioxus_primitives::calendar::*;
 
 fn main() {
     dioxus::launch(|| {
@@ -34,6 +35,8 @@ enum Route {
     Home,
     #[route("/login")]
     Login,
+    #[route("/planner")]
+    Planner,
 }
 
 const FIREBASE_RESPONSE: GlobalSignal<Option<FirebaseResponse>> = Global::new(Option::default);
@@ -46,6 +49,8 @@ fn Home() -> Element {
     rsx! {
         h1 { "Homeschool HQ" }
         button { onclick, if FIREBASE_RESPONSE.read().is_some() { "Log out" } else { "Log in" } }
+    br {}
+    button { onclick: |_| { use_navigator().push(Route::Planner); }, "Planner" }
     }
 }
 
@@ -89,6 +94,26 @@ fn Login() -> Element {
                 br {}
                 button { "Sign in" }
             }
+        }
+    }
+}
+
+pub fn Planner() -> Element {
+    let mut selected_date = use_signal(|| None);
+    let mut view_date = use_signal(|| CalendarDate::new(1970, 1, 1));
+
+    rsx! {
+        h1 { "Planner" }
+        Calendar {
+            selected_date: selected_date(),
+            on_date_change: move |date| {
+                selected_date.set(date);
+            },
+            view_date: view_date(),
+            on_view_change: move |view| {
+                view_date.set(view);
+            },
+            CalendarGrid {}
         }
     }
 }

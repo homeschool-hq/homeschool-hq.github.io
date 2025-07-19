@@ -2,6 +2,9 @@
 members = ["backend", "frontend"]
 resolver = "3"
 
+[patch.crates-io]
+dioxus-time = { git = "https://github.com/ealmloff/dioxus-std", branch = "0.7" }
+
 [profile.wasm-dev]
 inherits = "dev"
 opt-level = 1
