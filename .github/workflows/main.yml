@@ -1,0 +1,27 @@
+name: GitHub Pages Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+      - name: Run tests
+        run: cargo test --verbose
+  build-deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Dioxus deployment
+        uses: DioxusLabs/deploy-action@0.1.2
+        with:
+          outDirectory: ../target/dx/frontend/release/web/public
+          rootPath: frontend
