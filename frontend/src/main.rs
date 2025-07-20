@@ -5,6 +5,7 @@ use dioxus_primitives::calendar::*;
 fn main() {
     dioxus::launch(|| {
         rsx! {
+            h1 { "Homeschool HQ" }
             body {
                 Router::<Route> {}
             }
@@ -47,10 +48,10 @@ fn Home() -> Element {
     };
 
     rsx! {
-        h1 { "Homeschool HQ" }
+        h2 { "Home" }
         button { onclick, if FIREBASE_RESPONSE.read().is_some() { "Log out" } else { "Log in" } }
-    br {}
-    button { onclick: |_| { use_navigator().push(Route::Planner); }, "Planner" }
+        br {}
+        button { onclick: |_| { use_navigator().push(Route::Planner); }, "Planner" }
     }
 }
 
@@ -79,7 +80,7 @@ fn Login() -> Element {
     };
 
     rsx! {
-        h1 { "Login" }
+        h2 { if FIREBASE_RESPONSE.read().is_some() { "Logout" } else { "Login" } }
         if FIREBASE_RESPONSE.read().is_some() {
             button { onclick, "Confirm logout" }
         } else {
@@ -103,7 +104,7 @@ pub fn Planner() -> Element {
     let mut view_date = use_signal(|| CalendarDate::new(1970, 1, 1));
 
     rsx! {
-        h1 { "Planner" }
+        h2 { "Planner" }
         Calendar {
             selected_date: selected_date(),
             on_date_change: move |date| {
