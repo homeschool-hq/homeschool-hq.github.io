@@ -14,5 +14,7 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+      - name: Run clippy
+        run: cargo clippy --verbose
       - name: Run tests
         run: cargo test --verbose
