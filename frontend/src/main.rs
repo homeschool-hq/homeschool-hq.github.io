@@ -1,4 +1,5 @@
 #![allow(non_snake_case)]
+use chrono::Datelike;
 use dioxus::prelude::*;
 use dioxus_primitives::calendar::*;
 
@@ -104,6 +105,7 @@ pub fn Planner() -> Element {
     let mut view_date = use_signal(|| CalendarDate::new(1970, 1, 1));
 
     rsx! {
+        document::Stylesheet { href: asset!("/assets/main.css") }
         h2 { "Planner" }
         Calendar {
             selected_date: selected_date(),
@@ -114,6 +116,13 @@ pub fn Planner() -> Element {
             on_view_change: move |date| {
                 view_date.set(date);
             },
+            CalendarHeader {
+                CalendarNavigation {
+                    CalendarPreviousMonthButton { class: "arrow left" }
+                    CalendarMonthTitle {}
+                    CalendarNextMonthButton { class: "arrow right" }
+                }
+            }
             CalendarGrid {}
         }
     }

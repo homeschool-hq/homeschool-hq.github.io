@@ -1,0 +1,16 @@
+.arrow {
+    background: white;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    cursor: pointer;
+    display: block;
+    padding: 2px;
+}
+
+.left {
+    rotate: 135deg;
+}
+
+.right {
+    rotate: 315deg;
+}
