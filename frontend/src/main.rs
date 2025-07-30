@@ -101,8 +101,9 @@ fn Login() -> Element {
 }
 
 pub fn Planner() -> Element {
+    let date = chrono::Local::now();
     let mut selected_date = use_signal(|| None);
-    let mut view_date = use_signal(|| CalendarDate::new(1970, 1, 1));
+    let mut view_date = use_signal(|| CalendarDate::new(date.year(), date.month(), date.day()));
 
     rsx! {
         document::Stylesheet { href: asset!("/assets/main.css") }

@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+chrono = "0.4.41"
 dioxus = { version = "=0.7.0-alpha.3", features = ["router", "signals"] }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", version = "0.0.1" }
 reqwest = { version = "0.12.22", features = ["json"] }
