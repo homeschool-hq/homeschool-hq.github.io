@@ -22,8 +22,20 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Run Dioxus deployment
-        uses: DioxusLabs/deploy-action@0.1.2
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
         with:
-          outDirectory: ../target/dx/frontend/release/web/public
-          rootPath: frontend
+          override: true
+          profile: minimal
+          target: wasm32-unknown-unknown
+          toolchain: nightly
+      - name: Install dioxus-cli
+        run: cargo install dioxus-cli@0.7.0-alpha.3
+      - name: Build Dioxus project
+        run: cd frontend && dx build --release --verbose && cp ../target/dx/frontend/release/web/public/index.html ../target/dx/frontend/release/web/public/404.html && cd ..
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          clean: false
+          folder: target/dx/frontend/release/web/public
